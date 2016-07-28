@@ -1,4 +1,12 @@
 library(shiny)
+library(hurricaneexposure)
+library(hurricaneexposuredata)
+data("hurr_tracks")
+
+storms <- unique(hurr_tracks$storm_id)
+storm_years <- as.numeric(gsub(".+-", "", storms))
+storms <- storms[storm_years <= 2011]
+
 
 shinyUI(fluidPage(
   
@@ -8,24 +16,16 @@ shinyUI(fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      selectInput("year",label = "year",
-                  choices= c("1999"="1999"),
-                  selected = "1999"),
-        
-      
       
       selectInput("storm_id",label="storm_id",
-                  c("Floyd-1999"),
-        
+                  storms
+                  ),
       
-      
-      selectInput("metric", label="metric",
+      selectInput("metric", label="Storm Exposure Metric:",
                  choices =  c("distance","rainfall","wind"),
                  selected = "distance")
-      
-      
                  ),
     
-    mainPanel(plotOutput("map"))
-  )
+    mainPanel(plotOutput("map")))
+
 ))

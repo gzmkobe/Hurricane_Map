@@ -1,5 +1,6 @@
 library(shiny)
 library(devtools)
+library(ggplot2)
 library(hurricaneexposuredata)
 library(hurricaneexposure)
 
@@ -8,12 +9,9 @@ library(hurricaneexposure)
 shinyServer(function(input, output) {
   
   output$map <-renderPlot({
-    args1 <- swtich (input$storm_id, "Floyd-1999" = "Floyd-1999") 
-    args2 <- switch (input$metric, 
-                     "distance" ="distance",
-                     "rainfall"="rainfall",
-                     "wind"="wind")
-    map_counties(args1,args2)
+    a <- map_counties(storm = input$storm_id, metric = input$metric)
+    map_tracks(storms = input$storm_id, plot_object = a, plot_points = FALSE) + 
+      ggtitle(paste(input$storm_id, input$metric, sep = ", "))
                      
     })
   
