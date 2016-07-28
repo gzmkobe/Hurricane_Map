@@ -1,11 +1,7 @@
 library(shiny)
 library(hurricaneexposure)
 library(hurricaneexposuredata)
-data("hurr_tracks")
 
-storms <- unique(hurr_tracks$storm_id)
-storm_years <- as.numeric(gsub(".+-", "", storms))
-storms <- storms[storm_years <= 2011]
 
 
 data("hurr_tracks")
