@@ -5,17 +5,33 @@ library(hurricaneexposuredata)
 library(hurricaneexposure)
 
 
+data("hurr_tracks")
+storms <- unique(hurr_tracks$storm_id)
+storm_years <- as.numeric(gsub(".+-", "", storms))
+storms <- storms[storm_years <= 2011]
 
-shinyServer(function(input, output) {
+years <- unique(storm_years)
+years <- years[years<=2011]
 
+## Split storm_id based on same year
+stm <- split(storms, gsub(".+-", "", storms))
+
+
+
+
+shinyServer(function(input, output,session) {
+  
+  output$ui <- renderUI({
+    
+    selectInput("storm_id",label="storm_id",stm[input$years])
+    
+  }) 
   
   output$map <-renderPlot({
     a <- map_counties(storm = input$storm_id, metric = input$metric)
-    map_tracks(storms = input$storm_id, plot_object = a, plot_points = FALSE) + ### This code runs slower because if we dont change storm_id, only change
-     ### Metric, the map_tracks function wont be changed. Indeed, it re-runs map_tracks() so it takes long time to output.
+    map_tracks(storms = input$storm_id, plot_object = a, plot_points = FALSE) + 
       ggtitle(paste(input$storm_id, input$metric, sep = ", "))
-                     
-    })
+    
+  })
   
-
 })
