@@ -18,16 +18,16 @@ stm <- split(storms, gsub(".+-", "", storms))
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Hurricane"),
+  titlePanel("County-level exposure to tropical storms"),
   
   sidebarLayout(
     sidebarPanel(
-      selectInput("years",label = "years",years),
+      selectInput("year", label = "Storm year", years),
       
       # This outputs the dynamic UI component
       uiOutput("ui"),
-      selectInput("metric", label="Storm Exposure Metric:",
-                  choices =  c("distance","rainfall","wind"),
+      selectInput("metric", label="Storm exposure metric:",
+                  choices =  c("distance", "rainfall", "wind"),
                   selected = "distance")
     ),
     mainPanel(plotOutput("map"))

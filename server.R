@@ -15,19 +15,22 @@ years <- years[years <= 2011]
 
 ## Split storm_id based on same year
 stm <- split(storms, gsub(".+-", "", storms))
+stm <- lapply(stm, function (x) gsub("-.+", "", x))
 
 shinyServer(function(input, output,session) {
   
   output$ui <- renderUI({
     
-    selectInput("storm_id", label = "storm_id", stm[input$years])
+    selectInput("storm_name", label = "Storm name", stm[input$year])
     
   }) 
   
   output$map <-renderPlot({
-    a <- map_counties(storm = input$storm_id, metric = input$metric)
-    map_tracks(storms = input$storm_id, plot_object = a, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_id, input$metric, sep = ", "))
+    a <- map_counties(storm = paste(input$storm_name, input$year, sep = "-"),
+                      metric = input$metric)
+    map_tracks(storms = paste(input$storm_name, input$year, sep = "-"),
+               plot_object = a, plot_points = FALSE) + 
+      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))
     
   })
   
