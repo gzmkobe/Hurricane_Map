@@ -11,8 +11,6 @@ storms <- storms[storm_years <= 2011]
 years <- unique(storm_years)
 years <- years[years<=2011]
 
-## Split storm_id based on same year
-stm <- split(storms, gsub(".+-", "", storms))
 
 
 shinyUI(fluidPage(
