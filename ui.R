@@ -2,8 +2,8 @@ library(shiny)
 library(hurricaneexposure)
 library(hurricaneexposuredata)
 
-
 data("hurr_tracks")
+
 storms <- unique(hurr_tracks$storm_id)
 storm_years <- as.numeric(gsub(".+-", "", storms))
 storms <- storms[storm_years <= 2011]
@@ -22,7 +22,8 @@ shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      selectInput("year", label = "Storm year", years),
+      selectInput("year", label = "Storm year", years,
+                  selected = "1988"),
       
       # This outputs the dynamic UI component
       uiOutput("ui"),
