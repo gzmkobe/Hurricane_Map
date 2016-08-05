@@ -9,13 +9,8 @@ storm_years <- as.numeric(gsub(".+-", "", storms))
 storms <- storms[storm_years <= 2011]
 
 years <- unique(storm_years)
-<<<<<<< HEAD
-years <- years[years<=2011]
-
-
-=======
 years <- years[years <= 2011]
->>>>>>> 734cff36ea4282c4bcdf0a5bc9cf59bef49d45e9
+
 
 shinyUI(fluidPage(
   

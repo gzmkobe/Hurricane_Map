@@ -3,6 +3,7 @@ library(devtools)
 library(ggplot2)
 library(hurricaneexposuredata)
 library(hurricaneexposure)
+
 library(dplyr)
 
 data("hurr_tracks")
