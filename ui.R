@@ -1,6 +1,7 @@
 library(shiny)
 library(hurricaneexposure)
 library(hurricaneexposuredata)
+library(ggplot2)
 
 data("hurr_tracks")
 
@@ -29,6 +30,9 @@ shinyUI(fluidPage(
                   selected = "distance")
     ),
     mainPanel(plotOutput("map"))
+  ),
+  fluidRow(
+    DT::dataTableOutput("table")
   )
   
 ))
