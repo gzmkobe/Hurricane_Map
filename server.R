@@ -19,7 +19,7 @@ years <- years[years <= 2011]
 stm <- split(storms, gsub(".+-", "", storms))
 stm <- lapply(stm, function (x) gsub("-.+", "", x))
 
-shinyServer(function(input, output,session) {
+shinyServer(function(input, output, session) {
   
   output$ui <- renderUI({
     
