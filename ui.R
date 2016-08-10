@@ -27,7 +27,12 @@ shinyUI(fluidPage(
       uiOutput("ui"),
       selectInput("metric", label="Storm exposure metric:",
                   choices =  c("distance", "rainfall", "wind"),
-                  selected = "distance")
+                  selected = "distance"),
+      numericInput("limit", 
+                   label = "Limit range", 
+                   value = 100),
+      downloadButton('downloadData', 'Download The Table')
+      
     ),
     mainPanel(plotOutput("map"))
   ),
