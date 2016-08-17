@@ -3,7 +3,7 @@ library(devtools)
 library(ggplot2)
 library(hurricaneexposuredata)
 library(hurricaneexposure)
-
+library(choroplethrMaps)
 library(dplyr)
 
 data("hurr_tracks")

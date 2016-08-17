@@ -3,6 +3,7 @@ library(hurricaneexposure)
 library(hurricaneexposuredata)
 library(ggplot2)
 
+
 data("hurr_tracks")
 
 storms <- unique(hurr_tracks$storm_id)
