@@ -23,6 +23,9 @@ all_fips <- unique(county_centers$fips)
 stm <- split(storms, gsub(".+-", "", storms))
 stm <- lapply(stm, function (x) gsub("-.+", "", x))
 
+
+tab_out <- NULL
+
 shinyServer(function(input, output, session) {
   
   output$ui <- renderUI({
@@ -43,7 +46,7 @@ shinyServer(function(input, output, session) {
   
   output$table <- DT::renderDataTable(DT::datatable({
    if(input$metric == "distance"){
-     tab_out <- county_distance(counties = all_fips, start_year = input$year, 
+     tab_out <<- county_distance(counties = all_fips, start_year = input$year, 
                      end_year = input$year, dist_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
@@ -53,7 +56,7 @@ shinyServer(function(input, output, session) {
        arrange(storm_dist)
        
    } else if (input$metric == "rain"){
-     tab_out <- county_rain(counties = all_fips, start_year = input$year, 
+     tab_out <<- county_rain(counties = all_fips, start_year = input$year, 
                             end_year = input$year, rain_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
@@ -63,7 +66,7 @@ shinyServer(function(input, output, session) {
        dplyr::rename(rainfall_mm = tot_precip) %>%
        arrange(desc(rainfall_mm))
    } else if(input$metric == "wind"){
-     tab_out <- county_wind(counties = all_fips, start_year = input$year, 
+     tab_out <<- county_wind(counties = all_fips, start_year = input$year, 
                                 end_year = input$year, wind_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%

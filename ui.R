@@ -37,9 +37,9 @@ shinyUI(fluidPage(
     ),
     mainPanel(
       tabsetPanel(
-        tabPanel("Map",plotOutput("map")),
+        tabPanel("Map_Counties",plotOutput("map")),
         tabPanel("Table",DT::dataTableOutput("table")),
-        tabPanel("Exposure",plotOutput("exp")))
+        tabPanel("Map_Exposure",plotOutput("exp")))
              )
    )
     
