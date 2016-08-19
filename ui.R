@@ -35,10 +35,12 @@ shinyUI(fluidPage(
       downloadButton('downloadData', 'Download The Table')
       
     ),
-    mainPanel(plotOutput("map"))
-  ),
-  fluidRow(
-    DT::dataTableOutput("table")
-  )
-  
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Map",plotOutput("map")),
+        tabPanel("Table",DT::dataTableOutput("table")),
+        tabPanel("Exposure",plotOutput("exp")))
+             )
+   )
+    
 ))

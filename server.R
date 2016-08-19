@@ -43,7 +43,7 @@ shinyServer(function(input, output, session) {
   
   output$table <- DT::renderDataTable(DT::datatable({
    if(input$metric == "distance"){
-     tab_out <<- county_distance(counties = all_fips, start_year = input$year, 
+     tab_out <- county_distance(counties = all_fips, start_year = input$year, 
                      end_year = input$year, dist_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
@@ -51,8 +51,9 @@ shinyServer(function(input, output, session) {
        dplyr::mutate(county = paste(county_name, state_name, sep =  ", ")) %>%
        dplyr::select(county, fips, closest_date, storm_dist) %>%
        arrange(storm_dist)
+       
    } else if (input$metric == "rain"){
-     tab_out <<- county_rain(counties = all_fips, start_year = input$year, 
+     tab_out <- county_rain(counties = all_fips, start_year = input$year, 
                             end_year = input$year, rain_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
@@ -62,7 +63,7 @@ shinyServer(function(input, output, session) {
        dplyr::rename(rainfall_mm = tot_precip) %>%
        arrange(desc(rainfall_mm))
    } else if(input$metric == "wind"){
-     tab_out <<- county_wind(counties = all_fips, start_year = input$year, 
+     tab_out <- county_wind(counties = all_fips, start_year = input$year, 
                                 end_year = input$year, wind_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
@@ -74,6 +75,20 @@ shinyServer(function(input, output, session) {
    }
   })
   )
+  
+  
+  output$exp <- renderPlot({
+    storm_id <- paste(input$storm_name, input$year, sep = "-")
+    if(input$metric == "distance"){
+      map_distance_exposure(storm = storm_id,dist_limit = input$limit)
+    } else if (input$metric == "rain"){
+      map_rain_exposure(storm = storm_id,dist_limit = input$limit)
+    } else if (input$metric == "wind"){
+      map_wind_exposure(storm = storm_id,dist_limit = input$limit)
+    }
+  })
+  
+  
   output$downloadData <- downloadHandler(
     #filename = function() { paste(input$storm_name, input$year, input$metric,'.csv', sep='_') },
     filename = "ex.csv",
