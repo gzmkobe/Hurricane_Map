@@ -23,8 +23,9 @@ all_fips <- unique(county_centers$fips)
 stm <- split(storms, gsub(".+-", "", storms))
 stm <- lapply(stm, function (x) gsub("-.+", "", x))
 
-
+### Define global variable outside of shinyse
 tab_out <- NULL
+
 
 shinyServer(function(input, output, session) {
   
@@ -82,19 +83,22 @@ shinyServer(function(input, output, session) {
   
   output$exp <- renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
+  
+    
     if(input$metric == "distance"){
-      map_distance_exposure(storm = storm_id,dist_limit = input$limit)
+      b <- map_distance_exposure(storm = storm_id,dist_limit = input$limit)
     } else if (input$metric == "rain"){
-      map_rain_exposure(storm = storm_id,dist_limit = input$limit)
+      b <- map_rain_exposure(storm = storm_id,dist_limit = input$limit)
     } else if (input$metric == "wind"){
-      map_wind_exposure(storm = storm_id,dist_limit = input$limit)
+      b <- map_wind_exposure(storm = storm_id,dist_limit = input$limit)
     }
+    map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
+      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))
   })
   
   
   output$downloadData <- downloadHandler(
-    #filename = function() { paste(input$storm_name, input$year, input$metric,'.csv', sep='_') },
-    filename = "ex.csv",
+    filename = function() { paste(input$storm_name, input$year, input$metric, input$limit, 'csv', sep='_') },
     content = function(file) {
       write.csv(tab_out, file)
     })   ### if I can recall the table
