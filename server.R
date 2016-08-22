@@ -55,10 +55,9 @@ shinyServer(function(input, output, session) {
        dplyr::mutate(county = paste(county_name, state_name, sep =  ", ")) %>%
        dplyr::select(county, fips, closest_date, storm_dist) %>%
        arrange(storm_dist)
-       
-   } else if (input$metric == "rain"){
+   } else if (input$metric == "rainfall"){
      tab_out <<- county_rain(counties = all_fips, start_year = input$year, 
-                            end_year = input$year, rain_limit = input$limit) %>%
+                            end_year = input$year, rain_limit = input$limit,dist_limit = 100) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
        dplyr::left_join(county_centers, by = "fips") %>%
@@ -87,10 +86,10 @@ shinyServer(function(input, output, session) {
     
     if(input$metric == "distance"){
       b <- map_distance_exposure(storm = storm_id,dist_limit = input$limit)
-    } else if (input$metric == "rain"){
-      b <- map_rain_exposure(storm = storm_id,dist_limit = input$limit)
+    } else if (input$metric == "rainfall"){
+      b <- map_rain_exposure(storm = storm_id,rain_limit = input$limit,dist_limit = 100)
     } else if (input$metric == "wind"){
-      b <- map_wind_exposure(storm = storm_id,dist_limit = input$limit)
+      b <- map_wind_exposure(storm = storm_id,wind_limit = input$limit)
     }
     map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
       ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))
@@ -101,6 +100,6 @@ shinyServer(function(input, output, session) {
     filename = function() { paste(input$storm_name, input$year, input$metric, input$limit, 'csv', sep='_') },
     content = function(file) {
       write.csv(tab_out, file)
-    })   ### if I can recall the table
+    })
   
 })
