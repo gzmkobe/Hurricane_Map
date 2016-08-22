@@ -23,7 +23,7 @@ all_fips <- unique(county_centers$fips)
 stm <- split(storms, gsub(".+-", "", storms))
 stm <- lapply(stm, function (x) gsub("-.+", "", x))
 
-### Define global variable outside of shinyse
+### Define global variable outside of Shinys
 tab_out <- NULL
 
 
@@ -51,7 +51,7 @@ shinyServer(function(input, output, session) {
                      end_year = input$year, dist_limit = input$limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
-      dplyr::left_join(county_centers, by = "fips") %>%
+       dplyr::left_join(county_centers, by = "fips") %>%
        dplyr::mutate(county = paste(county_name, state_name, sep =  ", ")) %>%
        dplyr::select(county, fips, closest_date, storm_dist) %>%
        arrange(storm_dist)
@@ -97,7 +97,7 @@ shinyServer(function(input, output, session) {
   
   
   output$downloadData <- downloadHandler(
-    filename = function() { paste(input$storm_name, input$year, input$metric, input$limit, 'csv', sep='_') },
+    filename = function() {paste(input$storm_name, input$year, input$metric, input$limit, '.csv', sep='')},
     content = function(file) {
       write.csv(tab_out, file)
     })
