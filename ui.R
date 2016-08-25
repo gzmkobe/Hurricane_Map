@@ -31,14 +31,14 @@ shinyUI(fluidPage(
                   selected = "distance"),
       numericInput("limit", 
                    label = "Limit range", 
-                   value = 100),
-      downloadButton('downloadData', 'Download The Table')
+                   value = 100)
+      
       
     ),
     mainPanel(
       tabsetPanel(
         tabPanel("Map_Counties",plotOutput("map")),
-        tabPanel("Table",DT::dataTableOutput("table")),
+        tabPanel("Table",DT::dataTableOutput("table"),downloadButton('downloadData', 'Download The Table')),
         tabPanel("Map_Exposure",plotOutput("exp")))
              )
    )
