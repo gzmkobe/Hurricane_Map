@@ -40,7 +40,7 @@ shinyServer(function(input, output, session) {
     storm_id <- paste(input$storm_name, input$year, sep = "-")
     a <- map_counties(storm = storm_id, metric = input$metric)
     map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))
+      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
     
   })
   
@@ -92,7 +92,7 @@ shinyServer(function(input, output, session) {
       b <- map_wind_exposure(storm = storm_id,wind_limit = input$limit)
     }
     map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))
+      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
   })
   
   
