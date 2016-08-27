@@ -25,13 +25,11 @@ shinyUI(fluidPage(
                   selected = "1988"),
       
       # This outputs the dynamic UI component
-      uiOutput("ui"),
+      uiOutput("stormname"),
       selectInput("metric", label="Storm exposure metric:",
                   choices =  c("distance", "rainfall", "wind"),
                   selected = "distance"),
-      numericInput("limit", 
-                   label = "Limit range", 
-                   value = 100)
+      uiOutput("metric_input")
       
       
     ),

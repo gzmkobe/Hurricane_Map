@@ -29,18 +29,37 @@ tab_out <- NULL
 
 shinyServer(function(input, output, session) {
   
-  output$ui <- renderUI({
+  output$stormname <- renderUI({
     
     selectInput("storm_name", label = "Storm name", stm[input$year],
                 selected = "Alberto")
     
   }) 
   
+  output$metric_input <- renderUI({
+    if(input$metric=="distance"){
+      numericInput(inputId = paste0("dist_limit"),paste0("dist_limit"),100)
+    }else if( input$metric=="rainfall"){
+      list(   ### use list to and ui() to make achieve when select rainfall, three limits appears
+        numericInput(inputId = paste0("rain_limit"),paste0("rain_limit"),100),
+        numericInput(inputId = paste0("dist_limit"),paste0("dist_limit"),500),
+        sliderInput(inputId = paste0("days_included"),paste0("days_included"),
+                    min=-3,max=3,value=c(-2,1))
+        
+        
+      )
+    }else if (input$metric=="wind"){
+      numericInput(inputId = paste0("wind_limit"),paste0("wind_limit"),100)
+    }
+    
+  })
+  
   output$map <-renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
     a <- map_counties(storm = storm_id, metric = input$metric)
     map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
+      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+
+      theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
     
   })
   
@@ -48,7 +67,7 @@ shinyServer(function(input, output, session) {
   output$table <- DT::renderDataTable(DT::datatable({
    if(input$metric == "distance"){
      tab_out <<- county_distance(counties = all_fips, start_year = input$year, 
-                     end_year = input$year, dist_limit = input$limit) %>%
+                     end_year = input$year, dist_limit = input$dist_limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
        dplyr::left_join(county_centers, by = "fips") %>%
@@ -57,7 +76,9 @@ shinyServer(function(input, output, session) {
        arrange(storm_dist)
    } else if (input$metric == "rainfall"){
      tab_out <<- county_rain(counties = all_fips, start_year = input$year, 
-                            end_year = input$year, rain_limit = input$limit,dist_limit = 100) %>%
+                            end_year = input$year, rain_limit = input$rain_limit,dist_limit = input$dist_limit,
+                            days_included=input$days_included[1]:input$days_included[2]) %>%   
+       ### The function below takes day_included=c(-2,-1,0,1) so we need a seq to let the function work 
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
        dplyr::left_join(county_centers, by = "fips") %>%
@@ -67,7 +88,7 @@ shinyServer(function(input, output, session) {
        arrange(desc(rainfall_mm))
    } else if(input$metric == "wind"){
      tab_out <<- county_wind(counties = all_fips, start_year = input$year, 
-                                end_year = input$year, wind_limit = input$limit) %>%
+                                end_year = input$year, wind_limit = input$wind_limit) %>%
        dplyr::filter(storm_id == paste(input$storm_name,
                                        input$year, sep = "-")) %>%
        dplyr::left_join(county_centers, by = "fips") %>%
