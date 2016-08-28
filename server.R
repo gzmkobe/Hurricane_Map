@@ -5,6 +5,7 @@ library(hurricaneexposuredata)
 library(hurricaneexposure)
 library(choroplethrMaps)
 library(dplyr)
+library(purrr)
 
 data("hurr_tracks")
 data("county_centers")
@@ -106,11 +107,12 @@ shinyServer(function(input, output, session) {
   
     
     if(input$metric == "distance"){
-      b <- map_distance_exposure(storm = storm_id,dist_limit = input$limit)
+      b <- map_distance_exposure(storm = storm_id,dist_limit = input$dist_limit)
     } else if (input$metric == "rainfall"){
-      b <- map_rain_exposure(storm = storm_id,rain_limit = input$limit,dist_limit = 100)
+      b <- map_rain_exposure(storm = storm_id,rain_limit = input$rain_limit,dist_limit = input$dist_limit,
+                             days_included=input$days_included[1]:input$days_included[2])
     } else if (input$metric == "wind"){
-      b <- map_wind_exposure(storm = storm_id,wind_limit = input$limit)
+      b <- map_wind_exposure(storm = storm_id,wind_limit = input$wind_limit)
     }
     map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
       ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
