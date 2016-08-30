@@ -55,6 +55,7 @@ shinyServer(function(input, output, session) {
     
   })
   
+  # First tab
   output$map <-renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
     a <- map_counties(storm = storm_id, metric = input$metric)
@@ -64,7 +65,7 @@ shinyServer(function(input, output, session) {
     
   })
   
-  
+  # Second tab
   output$table <- DT::renderDataTable(DT::datatable({
    if(input$metric == "distance"){
      tab_out <<- county_distance(counties = all_fips, start_year = input$year, 
@@ -101,7 +102,7 @@ shinyServer(function(input, output, session) {
   })
   )
   
-  
+  #Third tab
   output$exp <- renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
   
@@ -118,7 +119,43 @@ shinyServer(function(input, output, session) {
       ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
   })
   
+  # Fourth tab
+  output$map1 <-renderPlot({
+    storm_id <- paste(input$storm_name, input$year, sep = "-")
+    a <- map_event_exposure(storm = storm_id, event_type = input$contentSelect)
+    map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) + 
+      ggtitle(paste(input$storm_name, input$year, input$contentSelect, sep = ", "))+
+      theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
+    
+  })
   
+  # Fifth tab
+  output$table1 <- renderTable({
+    c <- county_events(counties = all_fips,
+                  start_year = input$year, end_year = input$year,
+                  event_type = input$contentSelect)
+    
+  })
+  
+  ## 
+  observeEvent(input$contentSelect, {
+    if (input$contentSelect == "normal") {
+      output$content <- renderUI({
+        tabsetPanel(
+          tabPanel("Map_Counties",plotOutput("map")),
+          tabPanel("Table",DT::dataTableOutput("table"),downloadButton('downloadData', 'Download The Table')),  ### make download button inside table tab
+          tabPanel("Map_Exposure",plotOutput("exp"))
+        )
+      })    
+    } else {
+      output$content <- renderUI({
+        tabsetPanel(type = "tabs",
+                    tabPanel("map_event_exposure", plotOutput("map1")),
+                    tabPanel("county_events",tableOutput("table1"))
+        )
+      })       
+    }
+  })
   output$downloadData <- downloadHandler(
     filename = function() {paste(input$storm_name, input$year, input$metric, input$limit, '.csv', sep='')},
     content = function(file) {

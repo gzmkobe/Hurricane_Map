@@ -29,16 +29,14 @@ shinyUI(fluidPage(
       selectInput("metric", label="Storm exposure metric:",
                   choices =  c("distance", "rainfall", "wind"),
                   selected = "distance"),
-      uiOutput("metric_input")
-      
-      
-    ),
+      uiOutput("metric_input"),
+      selectInput("contentSelect", "Select content to dislay:", choices = c("normal", "flood","tornado"), selected = 1)
+      ),
+    
     mainPanel(
-      tabsetPanel(
-        tabPanel("Map_Counties",plotOutput("map")),
-        tabPanel("Table",DT::dataTableOutput("table"),downloadButton('downloadData', 'Download The Table')),
-        tabPanel("Map_Exposure",plotOutput("exp")))
-             )
+      uiOutput("content")
+      
+    )
    )
     
 ))
