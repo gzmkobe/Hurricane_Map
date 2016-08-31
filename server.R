@@ -130,12 +130,12 @@ shinyServer(function(input, output, session) {
   })
   
   # Fifth tab
-  output$table1 <- renderTable({
+  output$table1 <- DT::renderDataTable(DT::datatable({
     c <- county_events(counties = all_fips,
                   start_year = input$year, end_year = input$year,
                   event_type = input$contentSelect)
     
-  })
+  }))
   
   ## 
   observeEvent(input$contentSelect, {
@@ -151,7 +151,7 @@ shinyServer(function(input, output, session) {
       output$content <- renderUI({
         tabsetPanel(type = "tabs",
                     tabPanel("map_event_exposure", plotOutput("map1")),
-                    tabPanel("county_events",tableOutput("table1"))
+                    tabPanel("county_events",DT::dataTableOutput("table1"))
         )
       })       
     }
