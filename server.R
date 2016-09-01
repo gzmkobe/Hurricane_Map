@@ -150,7 +150,7 @@ shinyServer(function(input, output, session) {
     } else {
       output$content <- renderUI({
         tabsetPanel(type = "tabs",
-                    tabPanel("map_event_exposure", plotOutput("map1")),
+                    tabPanel("landing", plotOutput("map1")),
                     tabPanel("county_events",DT::dataTableOutput("table1"))
         )
       })       
