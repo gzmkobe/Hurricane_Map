@@ -2,7 +2,7 @@ library(shiny)
 library(hurricaneexposure)
 library(hurricaneexposuredata)
 library(ggplot2)
-
+library(shinydashboard)
 
 data("hurr_tracks")
 
@@ -15,27 +15,32 @@ years <- years[years <= 2011]
 
 
 ######################### UI
-shinyUI(fluidPage(
+shinyUI(dashboardPage(skin = "yellow",
   
   # Application title
-  titlePanel("County-level exposure to tropical storms"),
+  dashboardHeader(title = "County-level Exposure to Tropical Storms",titleWidth = 400),
   
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("year", label = "Storm year", years,
-                  selected = "1988"),
-      
+  dashboardSidebar("ffff",
+                   width = 400,
+                   "For more information, please click the link below",
+                   menuItem("Hurricane Exposure", icon = icon("fa fa-github"), 
+                            href = "https://github.com/geanders/hurricaneexposure")),
+  dashboardBody(
+    fluidRow(
+      box(
+          title = "User Control",status = "primary", solidHeader = TRUE, 
+          selectInput("year", label = "Storm year", years,
+                      selected = "1988"),
       # This outputs the dynamic UI component
-      uiOutput("stormname"),
-      selectInput("metric", label="Storm exposure metric:",
-                  choices =  c("distance", "rainfall", "wind","flood","tornado"),
-                  selected = "distance"),
-      uiOutput("metric_input")
-      ),
-    mainPanel(
-      uiOutput("content")
-      
+          uiOutput("stormname"),
+          selectInput("metric", label="Storm exposure metric:",
+                        choices =  c("distance", "rainfall", "wind","flood","tornado"),
+                        selected = "distance"),
+          uiOutput("metric_input")),
+      box(uiOutput("content")
+          )
     )
-   )
+  )
+   
     
 ))

@@ -6,6 +6,7 @@ library(hurricaneexposure)
 library(choroplethrMaps)
 library(dplyr)
 library(purrr)
+library(shinydashboard)
 
 data("hurr_tracks")
 data("county_centers")
