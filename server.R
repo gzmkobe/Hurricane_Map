@@ -159,9 +159,11 @@ shinyServer(function(input, output, session) {
       })    
     } else {
       output$content <- renderUI({
+        box(title = NULL, solidHeader = TRUE,background = "red",
         tabsetPanel(type = "tabs",
                     tabPanel("Map_Exposure", plotOutput("exp1")),
                     tabPanel("Table",DT::dataTableOutput("table1"))
+        )
         )
       })       
     }
