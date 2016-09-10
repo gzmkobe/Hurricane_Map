@@ -56,14 +56,22 @@ shinyServer(function(input, output, session) {
   })
   
   # First tab
-  output$map <-renderPlot({
+  output$exp <- renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
-    a <- map_counties(storm = storm_id, metric = input$metric)
-    map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+
-      theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
     
+    
+    if(input$metric == "distance"){
+      b <- map_distance_exposure(storm = storm_id,dist_limit = input$dist_limit)
+    } else if (input$metric == "rainfall"){
+      b <- map_rain_exposure(storm = storm_id,rain_limit = input$rain_limit,dist_limit = input$dist_limit,
+                             days_included=input$days_included[1]:input$days_included[2])
+    } else if (input$metric == "wind"){
+      b <- map_wind_exposure(storm = storm_id,wind_limit = input$wind_limit)
+    }
+    map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
+      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
   })
+
   
   # Second tab
   output$table <- DT::renderDataTable(DT::datatable({
@@ -103,20 +111,13 @@ shinyServer(function(input, output, session) {
   )
   
   #Third tab
-  output$exp <- renderPlot({
+  output$map <-renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
-  
+    a <- map_counties(storm = storm_id, metric = input$metric)
+    map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) +
+      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+
+      theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
     
-    if(input$metric == "distance"){
-      b <- map_distance_exposure(storm = storm_id,dist_limit = input$dist_limit)
-    } else if (input$metric == "rainfall"){
-      b <- map_rain_exposure(storm = storm_id,rain_limit = input$rain_limit,dist_limit = input$dist_limit,
-                             days_included=input$days_included[1]:input$days_included[2])
-    } else if (input$metric == "wind"){
-      b <- map_wind_exposure(storm = storm_id,wind_limit = input$wind_limit)
-    }
-    map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
   })
   
   # Fourth tab
@@ -142,16 +143,16 @@ shinyServer(function(input, output, session) {
     if (input$contentSelect == "normal") {
       output$content <- renderUI({
         tabsetPanel(
-          tabPanel("Map_Counties",plotOutput("map")),
+          tabPanel("Map_Exposure",plotOutput("exp")),
           tabPanel("Table",DT::dataTableOutput("table"),downloadButton('downloadData', 'Download The Table')),  ### make download button inside table tab
-          tabPanel("Map_Exposure",plotOutput("exp"))
+          tabPanel("Map_Counties",plotOutput("map"))
         )
       })    
     } else {
       output$content <- renderUI({
         tabsetPanel(type = "tabs",
-                    tabPanel("landing", plotOutput("map1")),
-                    tabPanel("county_events",DT::dataTableOutput("table1"))
+                    tabPanel("Map_Exposure", plotOutput("map1")),
+                    tabPanel("Table",DT::dataTableOutput("table1"))
         )
       })       
     }

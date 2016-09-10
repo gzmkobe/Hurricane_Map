@@ -14,6 +14,7 @@ years <- unique(storm_years)
 years <- years[years <= 2011]
 
 
+######################### UI
 shinyUI(fluidPage(
   
   # Application title
