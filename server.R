@@ -71,7 +71,7 @@ shinyServer(function(input, output, session) {
                              days_included=input$days_included[1]:input$days_included[2])
     } else if (input$metric == "wind"){
       b <- map_wind_exposure(storm = storm_id,wind_limit = input$wind_limit)
-    }
+    } 
     map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
       ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
   })
@@ -125,11 +125,11 @@ shinyServer(function(input, output, session) {
   })
   
   # Fourth tab
-  output$map1 <-renderPlot({
+  output$exp1 <-renderPlot({
     storm_id <- paste(input$storm_name, input$year, sep = "-")
-    a <- map_event_exposure(storm = storm_id, event_type = input$contentSelect)
+    a <- map_event_exposure(storm = storm_id, event_type = input$metric)
     map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$contentSelect, sep = ", "))+
+      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+
       theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
     
   })
@@ -138,13 +138,13 @@ shinyServer(function(input, output, session) {
   output$table1 <- DT::renderDataTable(DT::datatable({
     c <- county_events(counties = all_fips,
                   start_year = input$year, end_year = input$year,
-                  event_type = input$contentSelect)
+                  event_type = input$metric)
     
   }))
   
   ## 
-  observeEvent(input$contentSelect, {
-    if (input$contentSelect == "normal") {
+  observeEvent(input$metric, {
+    if (input$metric == "distance" | input$metric == "wind" | input$metric == "rainfall") {
       output$content <- renderUI({
         tabsetPanel(
           tabPanel("Map_Exposure",plotOutput("exp")),
@@ -155,7 +155,7 @@ shinyServer(function(input, output, session) {
     } else {
       output$content <- renderUI({
         tabsetPanel(type = "tabs",
-                    tabPanel("Map_Exposure", plotOutput("map1")),
+                    tabPanel("Map_Exposure", plotOutput("exp1")),
                     tabPanel("Table",DT::dataTableOutput("table1"))
         )
       })       

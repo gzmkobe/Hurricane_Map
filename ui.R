@@ -28,12 +28,10 @@ shinyUI(fluidPage(
       # This outputs the dynamic UI component
       uiOutput("stormname"),
       selectInput("metric", label="Storm exposure metric:",
-                  choices =  c("distance", "rainfall", "wind"),
+                  choices =  c("distance", "rainfall", "wind","flood","tornado"),
                   selected = "distance"),
-      uiOutput("metric_input"),
-      selectInput("contentSelect", "Select content to display:", choices = c("normal", "flood","tornado"), selected = 1)
+      uiOutput("metric_input")
       ),
-    
     mainPanel(
       uiOutput("content")
       
