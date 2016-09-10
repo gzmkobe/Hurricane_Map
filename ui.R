@@ -15,12 +15,17 @@ years <- years[years <= 2011]
 
 
 ######################### UI
-shinyUI(dashboardPage(skin = "yellow",
+shinyUI(dashboardPage(skin = "blue",
   
   # Application title
   dashboardHeader(title = "County-level Exposure to Tropical Storms",titleWidth = 400),
   
-  dashboardSidebar("ffff",
+  dashboardSidebar(valueBox("Description", "This website allows users to create binary hurricane
+                            exposure histories for chosen counties in a certain year based on specified thresholds
+                            of distance to storm track and rainfall during a the week
+                            centered on the storm date. This work was supported in part by grants from
+                            the National Institute of Environmental Health Sciences (R00ES022631) and
+                            the National Science Foundation (1331399).", color = "black", width = 400),
                    width = 400,
                    "For more information, please click the link below",
                    menuItem("Hurricane Exposure", icon = icon("fa fa-github"), 
@@ -28,7 +33,7 @@ shinyUI(dashboardPage(skin = "yellow",
   dashboardBody(
     fluidRow(
       box(
-          title = "User Control",status = "primary", solidHeader = TRUE, 
+          title = "User Control",status = "warning", solidHeader = TRUE, 
           selectInput("year", label = "Storm year", years,
                       selected = "1988"),
       # This outputs the dynamic UI component
@@ -37,8 +42,8 @@ shinyUI(dashboardPage(skin = "yellow",
                         choices =  c("distance", "rainfall", "wind","flood","tornado"),
                         selected = "distance"),
           uiOutput("metric_input")),
-      box(uiOutput("content")
-          )
+      uiOutput("content")
+          
     )
   )
    

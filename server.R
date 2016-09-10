@@ -74,7 +74,8 @@ shinyServer(function(input, output, session) {
       b <- map_wind_exposure(storm = storm_id,wind_limit = input$wind_limit)
     } 
     map_tracks(storms = storm_id, plot_object = b, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))+theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
+      ggtitle(paste(input$storm_name, input$year, input$metric, input$limit, sep = ", "))
+    # +theme(plot.title = element_text(margin = margin(t = 10, b = -20)))
   })
 
   
@@ -130,8 +131,9 @@ shinyServer(function(input, output, session) {
     storm_id <- paste(input$storm_name, input$year, sep = "-")
     a <- map_event_exposure(storm = storm_id, event_type = input$metric)
     map_tracks(storms = storm_id, plot_object = a, plot_points = FALSE) + 
-      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))+
-      theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
+      ggtitle(paste(input$storm_name, input$year, input$metric, sep = ", "))
+    # +
+    #   theme(plot.title = element_text(margin = margin(t = 10, b = -20)))  ### adjust title position
     
   })
   
@@ -147,10 +149,12 @@ shinyServer(function(input, output, session) {
   observeEvent(input$metric, {
     if (input$metric == "distance" | input$metric == "wind" | input$metric == "rainfall") {
       output$content <- renderUI({
+        box(title = NULL, solidHeader = TRUE,background = "yellow",
         tabsetPanel(
           tabPanel("Map_Exposure",plotOutput("exp")),
           tabPanel("Table",DT::dataTableOutput("table"),downloadButton('downloadData', 'Download The Table')),  ### make download button inside table tab
           tabPanel("Map_Counties",plotOutput("map"))
+        )
         )
       })    
     } else {
