@@ -149,7 +149,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$metric, {
     if (input$metric == "distance" | input$metric == "wind" | input$metric == "rainfall") {
       output$content <- renderUI({
-        box(title = NULL, solidHeader = TRUE,background = "yellow",
+        box(title = "Display", solidHeader = TRUE,status = "warning",
         tabsetPanel(
           tabPanel("Map_Exposure",plotOutput("exp")),
           tabPanel("Table",DT::dataTableOutput("table"),downloadButton('downloadData', 'Download The Table')),  ### make download button inside table tab
@@ -159,7 +159,7 @@ shinyServer(function(input, output, session) {
       })    
     } else {
       output$content <- renderUI({
-        box(title = NULL, solidHeader = TRUE,background = "red",
+        box(title = "Display", solidHeader = TRUE,status = "success",
         tabsetPanel(type = "tabs",
                     tabPanel("Map_Exposure", plotOutput("exp1")),
                     tabPanel("Table",DT::dataTableOutput("table1"))
