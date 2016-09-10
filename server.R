@@ -39,18 +39,22 @@ shinyServer(function(input, output, session) {
   
   output$metric_input <- renderUI({
     if(input$metric=="distance"){
-      numericInput(inputId = paste0("dist_limit"),paste0("dist_limit"),100)
+      numericInput(inputId = paste0("dist_limit"),
+                   paste0("Distance limit (km)"), value = 100)
     }else if( input$metric=="rainfall"){
       list(   ### use list to and ui() to make achieve when select rainfall, three limits appears
-        numericInput(inputId = paste0("rain_limit"),paste0("rain_limit"),100),
-        numericInput(inputId = paste0("dist_limit"),paste0("dist_limit"),500),
-        sliderInput(inputId = paste0("days_included"),paste0("days_included"),
-                    min=-3,max=3,value=c(-2,1))
+        numericInput(inputId = paste0("rain_limit"), label = paste0("Rain limit (mm)"),
+                     value = 75),
+        numericInput(inputId = paste0("dist_limit"), label = paste0("Distance limit (km)"),
+                     value = 500),
+        sliderInput(inputId = paste0("days_included"),label = paste0("Days included"),
+                    min = -3, max = 3, value = c(-2,1))
         
         
       )
     }else if (input$metric=="wind"){
-      numericInput(inputId = paste0("wind_limit"),paste0("wind_limit"),100)
+      numericInput(inputId = paste0("wind_limit"),
+                   label = paste0("Wind speed limit (m / s)"), value = 15)
     }
     
   })

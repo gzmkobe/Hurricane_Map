@@ -31,7 +31,7 @@ shinyUI(fluidPage(
                   choices =  c("distance", "rainfall", "wind"),
                   selected = "distance"),
       uiOutput("metric_input"),
-      selectInput("contentSelect", "Select content to dislay:", choices = c("normal", "flood","tornado"), selected = 1)
+      selectInput("contentSelect", "Select content to display:", choices = c("normal", "flood","tornado"), selected = 1)
       ),
     
     mainPanel(
