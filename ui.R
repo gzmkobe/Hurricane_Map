@@ -18,7 +18,7 @@ years <- years[years <= 2011]
 shinyUI(dashboardPage(skin = "blue",
   
   # Application title
-  dashboardHeader(title = "County-level Exposure to Tropical Storms",titleWidth = 400),
+  dashboardHeader(title = "County-level exposure to tropical storms",titleWidth = 400),
   
   dashboardSidebar(valueBox("Description", "This website allows users to create binary hurricane
                             exposure histories for chosen counties in a certain year based on specified thresholds
